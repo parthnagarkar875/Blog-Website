@@ -6,7 +6,22 @@ Created on Wed Apr 22 02:06:46 2020
 """
 
 
-from flask import Flask
+from flask import Flask, render_template
+
+posts=[
+       {
+        'author':'Parth Nagarkar',
+        'title':'Blog post 1',
+        'content': 'First post content',
+        'date_posted':'April 28, 2020'
+        },
+       {
+        'author':'Kamal Chachad',
+        'title':'Blog post 2',
+        'content': 'Second post content',
+        'date_posted':'June 15, 2020'
+        }
+       ]
 
 # =============================================================================
 # Tells your Flask application where to look for the files. When using a single module, use __name__ but when using a package, 
@@ -21,12 +36,12 @@ app.secret_key= 'parth'
 # =============================================================================
 
 @app.route('/')     #Tells the flask app which URL should call the associated function. (Function= home in this case)
-def hello():
-    return "<h4>Homepage, World!<h4>"
+def home():
+    return render_template('home.html',posts=posts)
 
 @app.route('/about')
 def about():
-    return "<h1>About page</h1>"
+    return render_template('about.html',title='About')
 
 
 if __name__ == '__main__':
