@@ -6,7 +6,7 @@ Created on Wed Apr 22 02:06:46 2020
 """
 
 
-from flask import Flask, render_template
+from flask import Flask, render_template, url_for     #url_for is used for routing through links. We have used it while linking the CSS file. 
 
 posts=[
        {
