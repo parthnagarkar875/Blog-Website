@@ -5,8 +5,8 @@ Created on Wed Apr 22 02:06:46 2020
 @author: Parth
 """
 
-
-from flask import Flask, render_template, url_for     #url_for is used for routing through links. We have used it while linking the CSS file. 
+from flask import Flask,redirect,render_template,flash,url_for     #url_for is used for routing through links. We have used it while linking the CSS file. 
+from forms import RegistrationForm, LoginForm
 
 posts=[
        {
@@ -28,7 +28,7 @@ posts=[
 # it is better to hardcode the name of the package. 
 # =============================================================================
 app=Flask(__name__) 
-app.secret_key= 'parth'
+app.config['SECRET_KEY']= 'e4404166e9d8df572cfa785bafa4cdb7'
 
 # =============================================================================
 # WSGI= Web Server Gateway Interface. 
@@ -42,6 +42,19 @@ def home():
 @app.route('/about')
 def about():
     return render_template('about.html',title='About')
+
+@app.route('/register',methods=['GET','POST'])
+def register():
+    form=RegistrationForm()
+    if form.validate_on_submit():
+        flash(f'Account created for {form.username.data}!', 'success')
+        return redirect(url_for('home'))
+    return render_template('register.html',title='Register',form=form)
+
+@app.route('/login')
+def login():
+    form=LoginForm() 
+    return render_template('login.html',title='Login',form=form)
 
 
 if __name__ == '__main__':
