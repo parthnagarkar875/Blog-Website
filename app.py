@@ -4,8 +4,9 @@ Created on Wed Apr 22 02:06:46 2020
 
 @author: Parth
 """
-
+from datetime import datetime
 from flask import Flask,redirect,render_template,flash,url_for     #url_for is used for routing through links. We have used it while linking the CSS file. 
+from flask_sqlalchemy import SQLAlchemy
 from forms import RegistrationForm, LoginForm
 
 posts=[
@@ -29,11 +30,38 @@ posts=[
 # =============================================================================
 app=Flask(__name__) 
 app.config['SECRET_KEY']= 'e4404166e9d8df572cfa785bafa4cdb7'
+app.config['SQLALCHEMY_DATABASE_URI']= 'sqlite:///site.db'
+db= SQLAlchemy(app)
+
 
 # =============================================================================
 # WSGI= Web Server Gateway Interface. 
 # It is an interface that allows the servers to send data/requests to the applications for processing.
 # =============================================================================
+
+class User(db.Model):
+    id=db.Column(db.Integer, primary_key=True)
+    username=db.Column(db.String(20), unique=True, nullable=False)
+    email=db.Column(db.String(120), unique=True, nullable=False)
+    image_file= db.Column(db.String(20),nullable=False, default='default.jpg')    
+    password=db.Column(db.String(60), nullable=False)
+    posts=db.relationship('Post',backref='author',lazy=True)    #Lazy argument defines when the data will be loaded form the database. 
+    
+    def __repr__(self):     #__repr__ method is used for returning a printable representation of a python object.        
+        return f"User('{self.username}','{self.email}','{self.image_file}')"
+    
+    
+class Post(db.Model):
+    id=db.Column(db.Integer, primary_key=True)
+    title=db.Column(db.String(100), nullable=False)
+    date_posted=db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    content=db.Column(db.Text, nullable=False)
+    user_id=db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    
+    def __repr__(self):
+        return f"Post('{self.title}','{self.date_posted}')"
+    
+
 
 @app.route('/')     #Tells the flask app which URL should call the associated function. (Function= home in this case)
 def home():
@@ -51,12 +79,36 @@ def register():
         return redirect(url_for('home'))
     return render_template('register.html',title='Register',form=form)
 
-@app.route('/login')
+@app.route('/login',methods=['GET','POST'])
 def login():
     form=LoginForm() 
+    if form.validate_on_submit():
+        if form.email.data == 'admin@blog.com' and form.password.data=='password':
+            flash('You have been logged in!','success')
+            return redirect(url_for('home'))
+        else:
+            flash("Unsuccessful login",'danger')
     return render_template('login.html',title='Login',form=form)
 
 
 if __name__ == '__main__':
     app.run(debug=True)
+
+
+'''
+Commands used to create database, insert values and print values:
+--> from app import db
+--> db.create_all()         #This creates the database structure. 
+--> from app import User, Post
+--> user_1 = User(username='Parth', email='nagarkarparth@gmail.com', password='goat')
+--> db.session.add(user_1)
+--> db.session.commit()
+--> User.query.first()      #Gives the first row stored in the database. 
+--> user= user.query.filter_by(username='Parth').first()
+-->post_1 = Post(title= 'Blog 1', content='First Post Content', user_id=user.id) 
+--> db.session.add(post_1)
+--> db.session.commit()
+--> user.posts
+--> post.author
+'''
 
