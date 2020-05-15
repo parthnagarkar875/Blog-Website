@@ -10,8 +10,7 @@ from flask import Flask,redirect,render_template,flash,url_for     #url_for is u
 from app.models import User, Post
 from datetime import datetime
 from app.forms import RegistrationForm, LoginForm
-from app import app
-
+from app import app,db, bcrypt
 
 # =============================================================================
 # WSGI= Web Server Gateway Interface. 
@@ -45,8 +44,13 @@ def about():
 def register():
     form=RegistrationForm()
     if form.validate_on_submit():
-        flash(f'Account created for {form.username.data}!', 'success')
-        return redirect(url_for('home'))
+        hashed_pw=bcrypt.generate_password_hash(form.password.data).decode('utf-8')         #decode method is used to represent it in a string rather than bytes.
+        user=User(username=form.username.data, email=form.email.data,password=hashed_pw)
+        db.session.add(user)
+        db.session.commit()
+        
+        flash(f'Account created for {form.username.data}! You may now login.', 'success')
+        return redirect(url_for('login'))
     return render_template('register.html',title='Register',form=form)
 
 @app.route('/login',methods=['GET','POST'])
