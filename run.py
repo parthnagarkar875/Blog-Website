@@ -20,7 +20,7 @@ Commands used to create database, insert values and print values:
 --> db.session.commit()
 --> User.query.first()      #Gives the first row stored in the database. 
 --> user= user.query.filter_by(username='Parth').first()
--->post_1 = Post(title= 'Blog 1', content='First Post Content', user_id=user.id) 
+--> post_1 = Post(title= 'Blog 1', content='First Post Content', user_id=user.id) 
 --> db.session.add(post_1)
 --> db.session.commit()
 --> user.posts
