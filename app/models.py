@@ -4,11 +4,22 @@ Created on Sat May  2 20:42:13 2020
 
 @author: Parth
 """
-from app import db
+from app import db, login_manager
+from flask_login import UserMixin    #This provides default implementations for the methods that Flask-Login expects user objects to have.
 from datetime import datetime
 
 
-class User(db.Model):
+# =============================================================================
+# load_user passes id of the user to flask so that it can fetch the appropraite 
+# id from the database
+# =============================================================================
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
+
+class User(db.Model, UserMixin):
     id=db.Column(db.Integer, primary_key=True)
     username=db.Column(db.String(20), unique=True, nullable=False)
     email=db.Column(db.String(120), unique=True, nullable=False)

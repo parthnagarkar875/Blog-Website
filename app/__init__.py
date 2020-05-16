@@ -5,7 +5,7 @@ Created on Sat May  2 21:06:56 2020
 @author: Parth
 """
 
-
+from flask_login import LoginManager           #flask_login makes it really easy to manage user sessions. 
 from flask import Flask,redirect,render_template,flash,url_for     #url_for is used for routing through links. We have used it while linking the CSS file. 
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
@@ -18,9 +18,10 @@ app=Flask(__name__)
 app.config['SECRET_KEY']= 'e4404166e9d8df572cfa785bafa4cdb7'
 app.config['SQLALCHEMY_DATABASE_URI']= 'sqlite:///site.db'
 db= SQLAlchemy(app)
-bcrypt=Bcrypt(app)
-
-#Bcrypt is de-optimized unlike MD5 and SHA1 in order to make it more difficult to get cracked
+bcrypt=Bcrypt(app)      #Bcrypt is de-optimized unlike MD5 and SHA1 in order to make it more difficult to get cracked
+login_manager=LoginManager(app)     
+login_manager.login_view='login'
+login_manager.login_message_category='info'
 
 
 from app import routes

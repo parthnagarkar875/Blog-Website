@@ -33,6 +33,7 @@ class RegistrationForm(FlaskForm):
         if user:
             raise ValidationError('That email is taken!')
 
+
 class LoginForm(FlaskForm):
     
     email=StringField('Email', 
