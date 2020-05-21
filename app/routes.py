@@ -67,7 +67,7 @@ def login():
         user=User.query.filter_by(email=form.email.data).first()
         if user and bcrypt.check_password_hash(user.password, form.password.data):
             login_user(user, remember=form.remember.data)           #if the user checks the remember me box, then it'll be true, else false. 
-            next_page=request.args.get('next')
+            next_page=request.args.get('next')                      #if user checks profile without logging in. 
             return redirect(next_page) if next_page else redirect(url_for('home'))
         else:
             flash("Unsuccessful login",'danger')
@@ -100,7 +100,7 @@ def save_picture(form_picture):
 def account():
     form=UpdateAccountForm()
     if form.validate_on_submit():
-        if form.picture.data:
+        if form.picture.data:               #check if any picture has been uploaded while updating details.
             picture_file=save_picture(form.picture.data)
             current_user.image_file = picture_file
         current_user.username=form.username.data
@@ -108,7 +108,7 @@ def account():
         db.session.commit()
         flash('Your account has been updated!','Success')
         return redirect(url_for('account'))
-    elif request.method == 'GET':
+    elif request.method == 'GET':                       #To display the email and username of user in the accounts page Textboxes
         form.username.data =current_user.username
         form.email.data =current_user.email
     image_file=url_for('static', filename='profile_pics/'+ current_user.image_file)
