@@ -11,7 +11,7 @@ from PIL import Image
 from flask import Flask,redirect,request,render_template,flash,url_for     #url_for is used for routing through links. We have used it while linking the CSS file. 
 from app.models import User, Post
 from datetime import datetime
-from app.forms import RegistrationForm, LoginForm,UpdateAccountForm
+from app.forms import RegistrationForm, LoginForm,UpdateAccountForm, PostForm
 from app import app,db, bcrypt
 from flask_login import login_user, current_user, logout_user, login_required
 import os
@@ -21,23 +21,9 @@ import os
 # It is an interface that allows the servers to send data/requests to the applications for processing.
 # =============================================================================
   
-posts = [
-    {
-        'author': 'Corey Schafer',
-        'title': 'Blog Post 1',
-        'content': 'First post content',
-        'date_posted': 'April 20, 2018'
-    },
-    {
-        'author': 'Jane Doe',
-        'title': 'Blog Post 2',
-        'content': 'Second post content',
-        'date_posted': 'April 21, 2018'
-    }
-]
-
 @app.route('/')     #Tells the flask app which URL should call the associated function. (Function= home in this case)
 def home():
+    posts=Post.query.all()
     return render_template('home.html',posts=posts)
 
 @app.route('/about')
@@ -115,5 +101,33 @@ def account():
     return render_template('account.html',title='Account', image_file=image_file, form=form)
 
 
-
+@app.route('/post/new',methods=['GET','POST'])
+@login_required
+def new_post():
+    form=PostForm()    
+    if form.validate_on_submit():
+        post=Post(title=form.title.data, content=form.content.data, author=current_user)
+        db.session.add(post)
+        db.session.commit()
+        flash('Your post has been created','success')
+        return redirect(url_for('home'))
+    return render_template('create_post.html',title='New Post', form = form)
+            
     
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
