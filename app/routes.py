@@ -22,8 +22,10 @@ import os
 # =============================================================================
   
 @app.route('/')     #Tells the flask app which URL should call the associated function. (Function= home in this case)
+@app.route('/home')     
 def home():
-    posts=Post.query.all()
+    page=request.args.get('page', 1, type=int)                #Checking query parameter in URL
+    posts=Post.query.order_by(Post.date_posted.desc()).paginate(page=page,per_page=5)
     return render_template('home.html',posts=posts)
 
 @app.route('/about')
@@ -147,10 +149,11 @@ def delete_post(post_id):
     flash("Your post has been deleted!", "Success")
     return redirect(url_for('home'))
 
-
-
-
-
-
-
-
+@app.route('/user/<string:username>')     
+def user_posts(username):
+    page=request.args.get('page', 1, type=int)                #Checking query parameter in URL
+    user=User.query.filter_by(username=username).first_or_404()
+    posts=Post.query.filter_by(author=user)\
+        .order_by(Post.date_posted.desc())\
+        .paginate(page=page,per_page=5)
+    return render_template('user_posts.html',posts=posts, user=user)
