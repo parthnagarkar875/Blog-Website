@@ -23,6 +23,7 @@ bcrypt=Bcrypt(app)      #Bcrypt is de-optimized unlike MD5 and SHA1 in order to 
 login_manager=LoginManager(app)     
 login_manager.login_view='login'
 login_manager.login_message_category='info'
+#Below code is for logging in via gmail for the purpose of sending reset email. 
 app.config['MAIL_SERVER'] = 'smtp.googlemail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
