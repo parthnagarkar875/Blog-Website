@@ -4,10 +4,11 @@ Created on Sat May  2 20:42:13 2020
 
 @author: Parth
 """
-from app import db, login_manager, app
+from app import db, login_manager
 from flask_login import UserMixin    #This provides default implementations for the methods that Flask-Login expects user objects to have.
 from datetime import datetime
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
+from flask import current_app
 
 # =============================================================================
 # load_user passes id of the user to flask so that it can fetch the appropraite 
@@ -33,12 +34,12 @@ class User(db.Model, UserMixin):
 # >>>token
 # 'eyJhbGciOiJIUzUxMiIsImlhdCI6MTU5MDQyMDE4OSwiZXhwIjoxNTkwNDIwMjE5fQ.eyJ1c2VyX2lkIjoxfQ.cKZspdeU4Z0nWpabZwBc_1YXgIV5VqTsaH5z2u3NQ113N_u9uuTz0l73G_a7mQS-VkZQjDNtw2eTb12pXy5oyw'
 
-        s=Serializer(app.config['SECRET_KEY'], expires_sec)             #Generating a token
+        s=Serializer(current_app.config['SECRET_KEY'], expires_sec)             #Generating a token
         return s.dumps({'user_id': self.id}).decode('utf-8') 
 
     @staticmethod
     def verify_reset_token(token):
-        s=Serializer(app.config['SECRET_KEY'])                          #from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
+        s=Serializer(current_app.config['SECRET_KEY'])                          #from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
         try:                                                            
             user_id=s.loads(token)['user_id']                           #s.loads(token) (next line output)= {'user_id': 1}
         except:

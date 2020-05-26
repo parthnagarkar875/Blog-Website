@@ -4,10 +4,12 @@ Created on Wed Apr 22 02:06:46 2020
 
 @author: Parth
 """
-from app import app
+from app import create_app
+
+rapp=create_app()
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    rapp.run(debug=True)
 
 
 '''
