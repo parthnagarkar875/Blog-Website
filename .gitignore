@@ -2,4 +2,3 @@ __pycache__/
 *.pyc
 .vscode/
 credentials.py
-runtime.txt
