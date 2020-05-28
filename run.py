@@ -6,10 +6,10 @@ Created on Wed Apr 22 02:06:46 2020
 """
 from app import create_app
 
-rapp=create_app()
+app=create_app()
 
 if __name__ == '__main__':
-    rapp.run(debug=True)
+    app.run(debug=True)
 
 
 '''
