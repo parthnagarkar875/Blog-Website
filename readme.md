@@ -1,10 +1,6 @@
 A blog website made by me to understand the fundamentals of Flask. 
 Website is hosted at http://goatchain-blog.herokuapp.com/home
 
-# Flask Blog
-
-Flask blog  is a Python Flask learning project which follows the tutorial of [Corey Schafer][corey] on Youtube.
-
 # Features!
 
   - Blogspot website with multiple users
