@@ -9,7 +9,7 @@ Website is hosted at http://goatchain-blog.herokuapp.com/home
   - Users can change their profile picture
   - Filtered pages for each user and their posts
   - Gmail connection for password reset
-  - Structred with flask blueprint
+  - Structured with flask blueprint
 
 ### Flask
 Flask is a micro web framework written in Python. It is classified as a microframework because it does not require particular tools or libraries.  As it writes on the [Wikipedia][wiki]
