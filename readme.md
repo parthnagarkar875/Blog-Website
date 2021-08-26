@@ -1,6 +1,7 @@
 A blog website made by me to understand the fundamentals of Flask. 
+<br>
 Website is hosted at http://goatchain-blog.herokuapp.com/home
-
+</br>
 # Features!
 
   - Blogspot website with multiple users
